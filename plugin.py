@@ -138,8 +138,7 @@ class BasePlugin:
                 sValue = 'On'
             UpdateDevice(1, nValue, sValue)
 
-
-    def onCommand(self, Unit, Command, Level, Hue):
+    def onCommand(self, Unit, Command, Level, Color):
         Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
         # onCommand called for Unit 1: Parameter 'Off', Level: 0
         if (Unit == 1):
