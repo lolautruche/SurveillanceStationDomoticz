@@ -158,6 +158,9 @@ class BasePlugin:
         return
 
     def onHeartbeat(self):
+        if (not self.SurvStationConn.Connected()):
+            self.SurvStationConn.Connect()
+
         self.HeartBeatsCount = self.HeartBeatsCount - 1
         # API call every 6 heartbeats (~1 min)
         if (self.HeartBeatsCount <= 0):
