@@ -123,8 +123,9 @@ class BasePlugin:
         elif (self.LastCalledAPI == 'SYNO.API.Info.Query'): # Getting API paths
             for name, info in response['data'].items():
                 self.APIPaths[name] = info["path"]
-            # Authenticate
-            self._login()
+            # Authenticate if needed
+            if (self.SurvStationSid == None):
+                self._login()
         elif (self.LastCalledAPI == 'SYNO.API.Auth.Login'):
             Domoticz.Log("Authenticated with session ID "+response["data"]["sid"])
             self.SurvStationSid = response["data"]["sid"]
