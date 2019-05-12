@@ -115,6 +115,7 @@ class BasePlugin:
                 Domoticz.Log("This API version is not supported")
             elif (response["error"]["code"] == 105):
                 Domoticz.Log("Insufficient user privilege")
+                self.SurvStationSid = None
                 self._login()
                 # TODO: Replay last API call
             elif (response["error"]["code"] == 107):
@@ -152,7 +153,8 @@ class BasePlugin:
         return
 
     def onDisconnect(self, Connection):
-        #Domoticz.Log("onDisconnect called")
+        Domoticz.Log(Connection.Name+" was disconnected")
+        self.SurvStationSid = None
         return
 
     def onHeartbeat(self):
