@@ -82,7 +82,7 @@ class BasePlugin:
         Params['path'] = self.APIPaths[APIName]
         APIMethod = APIName+'.'+Method
         # Auth.Login and Info don't need SID
-        if (APIMethod != 'SYNO.API.Auth.Login' and APIName != 'SYNO.API.Info'):
+        if (APIMethod != 'SYNO.API.Auth.Login') and (APIName != 'SYNO.API.Info'):
             Params['sid'] = self.SurvStationSid
 
         URL = self.APIURLs[APIMethod] % Params
