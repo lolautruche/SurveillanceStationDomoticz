@@ -62,8 +62,8 @@ class BasePlugin:
         self.SurvStationConn.Connect()
 
     def onStop(self):
-        Domoticz.Log("Logging out ServeillanceStation")
-        self._queryAPI('SYNO.API.Auth', 'Logout')
+        Domoticz.Log("Logging out from ServeillanceStation")
+        self._logout()
 
     def onConnect(self, Connection, Status, Description):
         Domoticz.Log("Status: "+str(Status))
@@ -97,6 +97,10 @@ class BasePlugin:
 
     def _login(self):
         self._queryAPI('SYNO.API.Auth', 'Login', {'username': Parameters['Mode2'], 'password': Parameters['Mode3']})
+
+    def _logout(self):
+        self.SurvStationSid = None
+        self._queryAPI('SYNO.API.Auth', 'Logout')
 
     def onMessage(self, Connection, Data):
         strData = Data["Data"].decode("utf-8", "ignore")
