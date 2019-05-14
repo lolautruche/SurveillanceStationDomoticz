@@ -6,14 +6,14 @@
 <plugin key="SurveillanceStation" name="Synology SurveillanceStation plugin" author="lolautruche" version="0.1">
     <description>
         <h2>Synology SurveillanceStation plugin for Domoticz</h2><br/>
-        Gives an access to SurveillanceStation API
+        Gives an access to <a href="https://www.synology.com/en-global/surveillance">SurveillanceStation Web API</a>
         <h3>Features</h3>
         <ul style="list-style-type:square">
-            <li>Toggle "Home Mode"</li>
+            <li>Toggles "Home Mode" with a switch</li>
         </ul>
         <h3>Devices</h3>
         <ul style="list-style-type:square">
-            <li>HomeMode switch - Toggles Home mode...</li>
+            <li><b>HomeMode</b> switch: Toggles Home mode</li>
         </ul>
     </description>
     <params>
@@ -85,8 +85,12 @@ class BasePlugin:
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Connection.Address+":"+Connection.Port)
             Domoticz.Debug("Failed to connect ("+str(Status)+") to: "+Connection.Address+":"+Connection.Port+" with error: "+Description)
 
+        # First thing to do is to get API paths
         self._queryAPI('SYNO.API.Info', 'Query')
 
+    # Generic method to query API.
+    # Only supports APIs listed in APIPaths.
+    # See self.APIURLs['SYNO.API.Info.Query'] to get which APIPaths are requested at connection time.
     def _queryAPI(self, APIName, Method, Params={}):
         if (APIName not in self.APIPaths):
             Domoticz.Log("API '"+APIName+"' not currently supported by plugin")
@@ -149,6 +153,7 @@ class BasePlugin:
             if (response["data"]["on"] == True):
                 nValue = 1
                 sValue = 'On'
+            # Manually updating device seems to be needed, it's not done by Domoticz.
             UpdateDevice(1, nValue, sValue)
 
     def onCommand(self, Unit, Command, Level, Color):
@@ -171,6 +176,7 @@ class BasePlugin:
         return
 
     def onHeartbeat(self):
+        # Ensure to keep the connection alive
         if (not self.SurvStationConn.Connected()):
             self.SurvStationConn.Connect()
 
