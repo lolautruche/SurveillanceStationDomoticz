@@ -27,6 +27,12 @@
         <param field="Port" label="Port" required="true" default="5000"/>
         <param field="Mode2" label="SurveillanceStation User" required="true"/>
         <param field="Mode3" label="Password" required="true"/>
+        <param field="Mode4" label="Debug" width="75px">
+            <options>
+                <option label="True" value="Debug"/>
+                <option label="False" value="Normal" default="true"/>
+            </options>
+        </param>
     </params>
 </plugin>
 """
@@ -53,10 +59,17 @@ class BasePlugin:
     HeartBeatsCount = 6
 
     def onStart(self):
-        Domoticz.Debugging(1)
+        if (Parameters['Mode4'] == 'Debug'):
+            Domoticz.Debugging(1)
+            DumpConfigToLog()
+
+        if ('SurvStationHomeMode' not in Images):
+            Domoticz.Image('SurvStationHomeMode.zip').Create()
 
         if (len(Devices) == 0):
             Domoticz.Device(Name="HomeMode", Unit=1, Type=244, Switchtype=0).Create()
+        if (1 in Devices): # HomeMode image update
+            Devices[1].Update(nValue=Devices[1].nValue, sValue=str(Devices[1].sValue), Image=Images['SurvStationHomeMode'].ID)
 
         self.SurvStationConn = Domoticz.Connection(Name="SurvStationConn", Transport="TCP/IP", Protocol=Parameters["Mode1"], Address=Parameters["Address"], Port=Parameters["Port"])
         self.SurvStationConn.Connect()
