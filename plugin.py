@@ -62,6 +62,8 @@ class BasePlugin:
         if (Parameters['Mode4'] == 'Debug'):
             Domoticz.Debugging(1)
             DumpConfigToLog()
+        else:
+            Domoticz.Debugging(0)
 
         if ('SurvStationHomeMode' not in Images):
             Domoticz.Image('SurvStationHomeMode.zip').Create()
@@ -75,12 +77,12 @@ class BasePlugin:
         self.SurvStationConn.Connect()
 
     def onStop(self):
-        Domoticz.Log("Logging out from ServeillanceStation")
+        Domoticz.Debug("Logging out from ServeillanceStation")
         self._logout()
 
     def onConnect(self, Connection, Status, Description):
-        Domoticz.Log("Status: "+str(Status))
-        Domoticz.Log(Description)
+        Domoticz.Debug("Status: "+str(Status))
+        Domoticz.Debug(Description)
         if (Status != 0):
             Domoticz.Log("Failed to connect ("+str(Status)+") to: "+Connection.Address+":"+Connection.Port)
             Domoticz.Debug("Failed to connect ("+str(Status)+") to: "+Connection.Address+":"+Connection.Port+" with error: "+Description)
@@ -103,7 +105,7 @@ class BasePlugin:
             Params['sid'] = self.SurvStationSid
 
         URL = self.APIURLs[APIMethod] % Params
-        Domoticz.Log(URL)
+        Domoticz.Debug(URL)
         self.SurvStationConn.Send({
             'Verb': 'GET',
             'URL': URL,
@@ -121,7 +123,7 @@ class BasePlugin:
 
     def onMessage(self, Connection, Data):
         strData = Data["Data"].decode("utf-8", "ignore")
-        Domoticz.Log(strData);
+        Domoticz.Debug(strData);
         response = json.loads(strData);
 
         if ("error" in response):
@@ -144,10 +146,10 @@ class BasePlugin:
             if (self.SurvStationSid == None):
                 self._login()
         elif (self.LastCalledAPI == 'SYNO.API.Auth.Login'):
-            Domoticz.Log("Authenticated with session ID "+response["data"]["sid"])
+            Domoticz.Debug("Authenticated with session ID "+response["data"]["sid"])
             self.SurvStationSid = response["data"]["sid"]
         elif (self.LastCalledAPI == 'SYNO.SurveillanceStation.HomeMode.GetInfo'):
-            Domoticz.Log("Updating HomeMode status: "+str(response["data"]["on"]))
+            Domoticz.Debug("Updating HomeMode status: "+str(response["data"]["on"]))
             nValue = 0
             sValue = 'Off'
             if (response["data"]["on"] == True):
@@ -157,7 +159,7 @@ class BasePlugin:
             UpdateDevice(1, nValue, sValue)
 
     def onCommand(self, Unit, Command, Level, Color):
-        Domoticz.Log("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
+        Domoticz.Debug("onCommand called for Unit " + str(Unit) + ": Parameter '" + str(Command) + "', Level: " + str(Level))
         # onCommand called for Unit 1: Parameter 'Off', Level: 0
         if (Unit == 1):
             Params = {'on_status': 'true' if Command == 'On' else 'false'}
@@ -171,7 +173,7 @@ class BasePlugin:
         return
 
     def onDisconnect(self, Connection):
-        Domoticz.Log(Connection.Name+" was disconnected")
+        Domoticz.Debug(Connection.Name+" was disconnected")
         self.SurvStationSid = None
         return
 
@@ -229,7 +231,7 @@ def UpdateDevice(Unit, nValue, sValue):
 
     if (Devices[Unit].nValue != nValue) or (Devices[Unit].sValue != sValue):
         Devices[Unit].Update(nValue=nValue, sValue=str(sValue))
-        Domoticz.Log("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
+        Domoticz.Debug("Update "+str(nValue)+":'"+str(sValue)+"' ("+Devices[Unit].Name+")")
     return
 
 def DumpConfigToLog():
