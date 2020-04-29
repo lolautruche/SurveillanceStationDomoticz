@@ -123,8 +123,8 @@ class BasePlugin:
 
     def onMessage(self, Connection, Data):
         strData = Data["Data"].decode("utf-8", "ignore")
-        Domoticz.Debug(strData);
-        response = json.loads(strData);
+        Domoticz.Debug(strData)
+        response = json.loads(strData)
 
         if ("error" in response):
             Domoticz.Log("An error was raised by SurveillanceStation API!")
