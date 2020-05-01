@@ -65,8 +65,7 @@ class BasePlugin:
         else:
             Domoticz.Debugging(0)
 
-        if ('SurvStationHomeMode' not in Images):
-            Domoticz.Image('SurvStationHomeMode.zip').Create()
+        Domoticz.Image('SurvStationHomeMode.zip').Create()
 
         if (len(Devices) == 0):
             Domoticz.Device(Name="HomeMode", Unit=1, Type=244, Switchtype=0).Create()
