@@ -49,8 +49,8 @@ class BasePlugin:
     }
     APIURLs = {
         'SYNO.API.Info.Query': '/webapi/%(path)s.cgi?api=SYNO.API.Info&method=Query&version=1&query=SYNO.API.Auth,SYNO.SurveillanceStation.HomeMode',
-        'SYNO.API.Auth.Login': '/webapi/%(path)s?api=SYNO.API.Auth&method=Login&version=2&account=%(username)s&passwd=%(password)s&session=SurveillanceStation&format=sid',
-        'SYNO.API.Auth.Logout': '/webapi/%(path)s?api=SYNO.API.Auth&method=Logout&version=2&session=SurveillanceStation&_sid="%(sid)s"',
+        'SYNO.API.Auth.Login': '/webapi/%(path)s?api=SYNO.API.Auth&method=Login&version=6&account=%(username)s&passwd=%(password)s&session=SurveillanceStation&format=sid',
+        'SYNO.API.Auth.Logout': '/webapi/%(path)s?api=SYNO.API.Auth&method=Logout&version=6&session=SurveillanceStation&_sid="%(sid)s"',
         'SYNO.SurveillanceStation.HomeMode.Switch': '/webapi/%(path)s?api=SYNO.SurveillanceStation.HomeMode&method=Switch&version=1&on=%(on_status)s&_sid="%(sid)s"',
         'SYNO.SurveillanceStation.HomeMode.GetInfo': '/webapi/%(path)s?api=SYNO.SurveillanceStation.HomeMode&method=GetInfo&version=1&_sid="%(sid)s"'
     }
